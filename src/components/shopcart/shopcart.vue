@@ -23,7 +23,9 @@
       </div>
     </div>
     <div class="shopcart-list" v-show="listShow">
-      <div class="list-header"></div>
+      <div class="list-header">
+        <div class="title"></div>
+      </div>
       <div class="list-content"></div>
     </div>
   </div>
