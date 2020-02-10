@@ -1,46 +1,49 @@
 <template>
-  <div class="shopcart">
-    <div class="content" @click="toggleList">
-      <div class="content-left">
-        <div class="logo-wrapper">
-          <div class="logo" :class="{'highlight':totalCount > 0}">
-            <i class="icon-shopping_cart" :class="{'highlight':totalCount > 0}"></i>
+  <div class="shopcart-wrapper">
+    <div class="shopcart">
+      <div class="content" @click="toggleList">
+        <div class="content-left">
+          <div class="logo-wrapper">
+            <div class="logo" :class="{'highlight':totalCount > 0}">
+              <i class="icon-shopping_cart" :class="{'highlight':totalCount > 0}"></i>
+            </div>
+            <div class="num" v-show="totalCount > 0">{{totalCount}}</div>
           </div>
-          <div class="num" v-show="totalCount > 0">{{totalCount}}</div>
+          <div class="price" :class="{'highlight':totalPrice > 0}">￥{{totalPrice}}</div>
+          <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
         </div>
-        <div class="price" :class="{'highlight':totalPrice > 0}">￥{{totalPrice}}</div>
-        <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
+        <div class="content-right" @click.stop.prevent="pay">
+          <div class="pay"
+            :class="payClass">{{payDesc}}
+          </div>
+        </div>
       </div>
-      <div class="content-right">
-        <div class="pay"
-          :class="payClass">{{payDesc}}
+      <div class="ball-container">
+        <div transition="drop" v-for="ball in balls" v-show="balls.show" class="ball">
+          <div class="inner inner-hook"></div>
+        </div>
+      </div>
+      <div class="shopcart-list" v-show="listShow" transition="fold">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty" @click="empty">清空</span>
+        </div>
+        <div class="list-content" v-el:list-content>
+          <ul>
+            <li class="food" v-for="food in selectFoods">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>￥{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food="food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-    <div class="ball-container">
-      <div transition="drop" v-for="ball in balls" v-show="balls.show" class="ball">
-        <div class="inner inner-hook"></div>
-      </div>
-    </div>
-    <div class="shopcart-list" v-show="listShow" transition="fold">
-      <div class="list-header">
-        <h1 class="title">购物车</h1>
-        <span class="empty" @click="empty">清空</span>
-      </div>
-      <div class="list-content" v-el:list-content>
-        <ul>
-          <li class="food" v-for="food in selectFoods">
-            <span class="name">{{food.name}}</span>
-            <div class="price">
-              <span>￥{{food.price*food.count}}</span>
-            </div>
-            <div class="cartcontrol-wrapper">
-              <cartcontrol :food="food"></cartcontrol>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <div class="list-mask" @click="hideList" v-show="listShow" transition="fade"></div>
   </div>
 </template>
 
@@ -93,8 +96,20 @@ export default {
     }
   },
   methods: {
+    hideList () {
+      this.fold = true
+    },
     empty () {
-      this.selectFoods = []
+      // this.selectFoods = []
+      this.selectFoods.forEach((food) => {
+      food.count = 0
+      })
+    },
+    pay () {
+      if (this.totalPrice < this.minPrice) {
+        return
+      }
+      window.alert(`支付${this.totalPrice}元`)
     },
     toggleList () {
       if (!this.totalCount) {
@@ -363,6 +378,21 @@ export default {
               position: absolute
               right: 0
               bottom:6px
+  .list-mask
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    z-index: 40
+    backdrop-filter: blur(10px)
+    &.fade-transition
+      transition: all 0.5s
+      opacity: 1
+      background: rgba(7, 17, 27, 0.6)
+    &.fade-enter, &.fade-leave
+      opacity: 0
+      background: rgba(7, 17, 27, 0)
 
 
 </style>
