@@ -54,6 +54,7 @@ export default {
         opacity: 1
         transform: translate3d(0, 0, 0)
         .inner
+          display: inline-block
           font-size: 24px
           line-height: 24px
           color: rgb(0, 160, 220)
