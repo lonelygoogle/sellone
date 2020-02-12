@@ -133,7 +133,6 @@ export default {
     drop: {
       beforeEnter (el) {
         console.log('before执行')
-        debugger
         let count = this.balls.length
         while (count--) {
           let ball = this.balls[count]
